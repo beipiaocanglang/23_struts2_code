@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+1、在src下创建名称为struts的xml配置文件
+2、导入约束
+	约束位置：struts2-core-xxx.jar中的struts-2.3.dtd中
+ -->
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 
+		修改struts2常量使用的元素是constant
+		属性name:对应的key
+		value：对应的值
+	-->
+	<!-- 开启开发者模式 -->
+	<constant name="struts.devMode" value="true"></constant>
+	<!-- 修改struts2默认拦截的url后缀 -->
+	<constant name="struts.action.extension" value="do"></constant>
+	
+	<!-- 目前照抄 -->
+	<package name="p1" extends="struts-default">
+		<!-- action元素的name属性只需要写页面上提供hello.action前面的部分。后缀不需要写，也不能写。-->
+		<action name="hello" class="study.web.action.HelloAction" method="sayHello">
+			<!-- 执行完成之后，还要响应浏览器 
+				name属性的取值是和动作方法的返回值一致，且严格区分大小写。
+			-->
+			<result name="success" type="dispatcher">/success.jsp</result>
+		</action>
+	</package>
+</struts>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+1、在src下创建名称为struts的xml配置文件
+2、导入约束
+	约束位置：struts2-core-xxx.jar中的struts-2.3.dtd中
+ -->
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+
+	<!-- 开启开发者模式 -->
+	<constant name="struts.devMode" value="true"></constant>
+	
+	<package name="param" extends="struts-default">
+		<!-- 静态参数封装配置：
+			明确的内容：
+				1、param元素调用的是对应的set方法。
+				2、基本数据类型自动转换。（同时没有中文乱码问题）
+				3、我们不配置任何拦截器，默认的defaultStack会工作，但是配置了任何一个拦截器后 ，defaultStack就失效了。
+				4、我们不做的事情，是由struts2框架为我们做了。拦截器的作用就是增强我们的动作方法。
+	 	-->
+	 	
+		<action name="demo01" class="study.web.action.Demo1action" method="demo01">
+			<!--param元素还可以给动作类注入参数：调用的也是对应的set方法 
+				name就是调用动作类中的setName方法。
+				age就是调用动作类中的setAge方法。
+				基本数据类型自动转换
+				
+				能封装成功的原因是：由一个名称为staticParams的拦截器为我们做的
+			-->
+			<!--我们在定义action时，不指定任何拦截器，默认是由defaultStack的拦截器栈为我们工作。
+				在我们的动作方法执行之前，defaultStack中的拦截器会先正序执行。在动作方法执行之后，会倒序执行。
+				但是：如果我们配置了任何一个拦截器，则默认的拦截器栈就失效了。
+				前提：我们的包必须继承struts-default
+			-->
+			<!-- 
+			将struts-default.xml中的default拦截器中的内容复制过来也可以执行
+			
+			<interceptor-ref name="exception"/>
+            <interceptor-ref name="alias"/>
+            <interceptor-ref name="servletConfig"/>
+            <interceptor-ref name="i18n"/>
+            <interceptor-ref name="prepare"/>
+            <interceptor-ref name="chain"/>
+            <interceptor-ref name="scopedModelDriven"/>
+            <interceptor-ref name="modelDriven"/>
+            <interceptor-ref name="fileUpload"/>
+            <interceptor-ref name="checkbox"/>
+            <interceptor-ref name="datetime"/>
+            <interceptor-ref name="multiselect"/>
+            <interceptor-ref name="staticParams"/>
+            <interceptor-ref name="actionMappingParams"/>
+            <interceptor-ref name="params"/>
+            <interceptor-ref name="conversionError"/>
+            <interceptor-ref name="validation">
+                <param name="excludeMethods">input,back,cancel,browse</param>
+            </interceptor-ref>
+            <interceptor-ref name="workflow">
+                <param name="excludeMethods">input,back,cancel,browse</param>
+            </interceptor-ref>
+            <interceptor-ref name="debugging"/>
+            <interceptor-ref name="deprecation"/>
+			-->
+           	<param name="name">泰斯特</param>
+			<param name="age">18</param>
+			<result name="success">
+				<param name="location">success.jsp</param>
+			</result>
+		</action>
+	</package>
+</struts>

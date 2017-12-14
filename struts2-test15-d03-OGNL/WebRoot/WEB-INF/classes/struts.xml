@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 开启开发者模式 -->
+	<constant name="struts.devModel" value="true"/>
+	
+	<!-- 改变struts2默认禁用静态方法 -->
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
+	
+</struts>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 开启开发者模式 -->
+	<constant name="struts.devMode" value="true"></constant>
+	
+	<!-- 
+		自定义拦截器小案例	版本D
+		存在的问题:没有
+		解决了版本C的问题
+	-->
+	<!-- 定义全局结果视图 -->
+	<package name="myDefaultInterceptor" extends="struts-default" abstract="true">
+		<!-- 配置自定义拦截器 -->
+		<interceptors>
+			<interceptor name="checkLoginInterceptor" class="study.web.interceptor.CheckLoginInterceptor"></interceptor>
+			 <!-- 把默认拦截器栈和自定义的检查登录拦截器统一成一个小组  -->
+			<interceptor-stack name="myDefaultStack">
+				<interceptor-ref name="checkLoginInterceptor"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<!-- 将自定义拦截器覆盖默认拦截器 -->
+		<default-interceptor-ref name="myDefaultStack"/>
+		<!-- 配置全局的结果视图 -->
+		<global-results>
+			<result name="login">login.jsp</result>
+		</global-results>
+	</package>
+	<package name="bbs" extends="myDefaultInterceptor">
+		<action name="showMain" class="study.web.action.BBSAction" method="showMain">
+			<result name="success">main.jsp</result>
+		</action>
+		<action name="showOther" class="study.web.action.BBSAction" method="showOther">
+			<result name="success">other.jsp</result>
+		</action>
+		<action name="login" class="study.web.action.BBSAction" method="login">
+			<!-- 为拦截器注入参数,告知拦截器要排除的方法 -->
+			<interceptor-ref name="myDefaultStack">
+				<param name="checkLoginInterceptor.excludeMethods">login</param>
+			</interceptor-ref>
+			<result name="login" type="redirectAction">showMain</result>
+		</action>
+	</package> 
+	
+	
+	
+	<!-- 
+		自定义拦截器小案例	版本C
+		存在的问题:
+			当我们配置了默认的拦截器栈是自己定义的时，连登录都会被检查，已经不能实现需求了
+		解决了版本B的问题
+	-->
+	<!-- 定义全局结果视图 -->
+	<!-- 
+	<package name="myDefaultInterceptor" extends="struts-default" abstract="true">
+		配置自定义拦截器
+		<interceptors>
+			<interceptor name="checkLoginInterceptor" class="study.web.interceptor.CheckLoginInterceptor"></interceptor>
+			 把默认拦截器栈和自定义的检查登录拦截器统一成一个小组 
+			<interceptor-stack name="myDefaultStack">
+				<interceptor-ref name="checkLoginInterceptor"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		将自定义拦截器覆盖默认拦截器
+		<default-interceptor-ref name="myDefaultStack"/>
+		配置全局的结果视图
+		<global-results>
+			<result name="login">login.jsp</result>
+		</global-results>
+	</package>
+	<package name="bbs" extends="myDefaultInterceptor">
+		<action name="showMain" class="study.web.action.BBSAction" method="showMain">
+			<result name="success">main.jsp</result>
+		</action>
+		<action name="showOther" class="study.web.action.BBSAction" method="showOther">
+			<result name="success">other.jsp</result>
+		</action>
+		<action name="login" class="study.web.action.BBSAction" method="login">
+			<result name="login" type="redirectAction">showMain</result>
+		</action>
+	</package> 
+	 -->
+	
+	
+	<!-- 
+		自定义拦截器小案例	版本B
+		存在的问题:
+			虽然我们定义了自己的拦截器栈，但是在每一个需要使用的地方还是要引用一次。
+		解决了版本A的问题
+	-->
+	<!-- 定义全局结果视图 -->
+	<!-- 
+	<package name="myDefaultInterceptor" extends="struts-default" abstract="true">
+		配置自定义拦截器
+		<interceptors>
+			<interceptor name="checkLoginInterceptor" class="study.web.interceptor.CheckLoginInterceptor"></interceptor>
+			 把默认拦截器栈和自定义的检查登录拦截器统一成一个小组 
+			<interceptor-stack name="myDefaultStack">
+				<interceptor-ref name="checkLoginInterceptor"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		配置全局的结果视图
+		<global-results>
+			<result name="login">login.jsp</result>
+		</global-results>
+	</package>
+	<package name="bbs" extends="myDefaultInterceptor">
+		<action name="showMain" class="study.web.action.BBSAction" method="showMain">
+			使用自定义拦截器
+			<interceptor-ref name="myDefaultStack"/>
+			<result name="success">main.jsp</result>
+		</action>
+		<action name="showOther" class="study.web.action.BBSAction" method="showOther">
+			使用自定义拦截器
+			<interceptor-ref name="myDefaultStack"/>
+			<result name="success">other.jsp</result>
+		</action>
+		<action name="login" class="study.web.action.BBSAction" method="login">
+			<result name="login" type="redirectAction">showMain</result>
+		</action>
+	</package> 
+	-->
+	
+	
+	<!-- 
+		自定义拦截器小案例	版本A
+		存在的问题:
+			当使用了自定义拦截器，需要在每个使用的地方配置一下，重复配置太多了。
+			默认的拦截器会失效，如果想用，需要手动在每一个action标签中配置
+			返回的登录界面，可以使用全局结果视图 
+	-->
+	<!-- 
+	<package name="bbs" extends="struts-default">
+		声明拦截器
+		<interceptors>
+			<interceptor name="myInterceptor1" class="study.web.interceptor.CheckLoginInterceptor"></interceptor>
+		</interceptors>
+		<action name="showMain" class="study.web.action.BBSAction" method="showMain">
+			使用自定义拦截器
+			<interceptor-ref name="myInterceptor1"/>
+			由于我们使用了自定义的拦截器，所以默认的拦截器栈就会失效，所以需要我们手动继承默认拦截器
+			<interceptor-ref name="defaultStack"/>
+			<result name="success">main.jsp</result>
+			<result name="login">login.jsp</result>
+		</action>
+		<action name="showOther" class="study.web.action.BBSAction" method="showOther">
+			使用自定义拦截器
+			<interceptor-ref name="myInterceptor1"/>
+			由于我们使用了自定义的拦截器，所以默认的拦截器栈就会失效，所以需要我们手动继承默认拦截器
+			<interceptor-ref name="defaultStack"/>
+			<result name="success">other.jsp</result>
+			<result name="login">login.jsp</result>
+		</action>
+		<action name="login" class="study.web.action.BBSAction" method="login">
+			<result name="login" type="redirectAction">showMain</result>
+		</action>
+	</package> 
+	-->
+	
+	
+	<!-- 拦截器测试 -->
+	<package name="p1" extends="struts-default">
+		<!-- 声明拦截器 -->
+		<interceptors>
+			<interceptor name="MyInterceptor1" class="study.web.interceptor.MyInterceptor1"></interceptor>
+			<interceptor name="MyInterceptor2" class="study.web.interceptor.MyInterceptor2"></interceptor>
+		</interceptors>
+		
+		<action name="action1" class="study.web.action.DemoAction1" method="demo1">
+			<!-- 使用拦截器 2-->
+			<interceptor-ref name="MyInterceptor2"></interceptor-ref>
+			<!-- 使用拦截器 1-->
+			<interceptor-ref name="MyInterceptor1"></interceptor-ref>
+			<result name="success">success.jsp</result>
+		</action>
+	</package>
+</struts>

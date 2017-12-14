@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+1、在src下创建名称为struts的xml配置文件
+2、导入约束
+	约束位置：struts2-core-xxx.jar中的struts-2.3.dtd中
+ -->
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+<!-- 搭建简单的struts2的开发环境 -->
+
+</struts>

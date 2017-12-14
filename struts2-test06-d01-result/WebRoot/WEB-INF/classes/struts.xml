@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+1、在src下创建名称为struts的xml配置文件
+2、导入约束
+	约束位置：struts2-core-xxx.jar中的struts-2.3.dtd中
+ -->
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 开启开发者模式 -->
+	<constant name="struts.devMode" value="true"></constant>
+	
+	<package name="user" extends="struts-default">
+		<action name="user" class="study.web.action.HelloAction" method="sayHello">
+			<!-- 
+				result元素：
+					作用：配置逻辑结果视图，当动作方法的返回值和该元素的name属性值一致时，采用指定的方式，前往指定的jsp页面/action/或者不返回任何页面。
+					属性：
+						name：配置的就是逻辑结果视图。要求和动作方法的返回值一致。
+						type：采用转向的方式。
+							常用的结果类型：
+								dispatcher：使用请求转发。是默认值。如果使用转发的话，此属性可以不写。(注意：它只能转发到jsp页面，不能转发到Action)
+								chain:转发到动作类
+								redirect：使用重定向。(注意：它只能重定向到jsp，不能重定向到Action)
+								redirectAction：重定向到另外的一个动作（result元素中间的内容要写的是动作名称）
+									相同名称空间
+										<result name="success" type="redirectAction">listAction</result>
+									不同名称空间
+										<result name="success" type="redirectAction">
+											param元素的使用：
+												它是为结果类型注入参数（传入参数），调用的是参数的set方法。
+												param元素的name属性写的是要注入的参数set方法后面的部分。且首字母转小写。
+											<param name="namespace">/n2</param>
+											<param name="actionName">list2Action</param>
+										</result>
+											
+									
+			-->
+			<result name="success" type="redirectAction">
+				<param name="actionName">list1Action</param><!-- 下面action的动作名称 -->
+			</result>
+		</action>
+		<action name="listAction">
+			<result name="success" type="redirect">listAction.jsp</result>
+		</action>
+	</package> 
+	
+	<package name="p2" extends="struts-default">
+		<action name="list1Action">
+			<result name="success">
+				<param name="location">listAction.jsp</param>
+			</result>
+		</action>
+	</package>
+	
+	<!-- 自定义全局结果视图 -->
+	<package name="myDefault" extends="struts-default" abstract="true">
+		<!--全局结果视图  -->
+		<global-results>
+			<!-- 用于整个应用中需要回到登录页面的地方 -->
+			<result name="login" type="redirect">/login.jsp</result>
+			<!-- 当成程序执行出现问题时，前往此页面 -->
+			<result name="error" type="dispatcher">/error.jsp</result>
+			<!-- 一般情况下多用于只提示一句话，操作成功时-->
+			<result name="success" type="dispatcher">/success.jsp</result>
+		</global-results>
+	</package>
+	<!-- 局部结果视图 -->
+	<package name="p3" extends="myDefault">
+		<!-- 
+			1、当actio元素只写name时默认的动作类是：class="com.opensymphony.xwork2.ActionSupport"、默认的动作方法是： method="execute"
+			访问方式：http://localhost:8080/struts2-test06-result/globalAction
+			2、当没有result元素时会执行全局结果视图
+			3、当全局和局部都有结果视图时会执行局部结果视图
+			4、全局结果视图和局部结果视图的优先级：
+				局部结果视图>全局结果视图
+		 -->
+		<action name="globalAction">
+			<!-- 局部结果视图 -->
+			<result name="success">
+				<param name="location">listAction.jsp</param>
+			</result>
+		</action>
+	</package>
+	
+</struts>

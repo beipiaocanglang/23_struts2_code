@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	导入约束
+	位置：
+		\struts2-jar\struts-2.3.24-all\struts-2.3.24\apps\struts2-blank\WEB-INF\lib\xwork-core-2.3.24\xwork-validator-1.0.3.dtd
+-->
+<!DOCTYPE validators PUBLIC
+  		"-//Apache Struts//XWork Validator 1.0.3//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<!-- 
+	局部验证器(单独的某一个类) 
+	全局验证器的命名规则：
+		在需要验证的类的包下(和类同级)创建一个xml文件(类名+动作名称(action的name属性值)+validation.xml)
+-->
+<validators>
+	<!-- 编写验证 -->
+	<!-- 基于字段的编写方式 -->
+	<field name="username"><!-- 指定要验证的字段 -->
+		<!-- 
+			使用哪个验证器来验证（见下面默认验证器详解）
+			(requiredstring验证器)位置：
+				\struts2-jar\struts-2.3.24-all\struts-2.3.24\apps\struts2-blank\WEB-INF\lib\xwork-core-2.3.24\com\opensymphony\xwork2\validator\validators\default.xml
+		 -->
+		<field-validator type="requiredstring">
+			<message>用户名呢</message>
+		</field-validator>
+	</field>
+	
+	<!-- 基于验证器的编写方式 -->
+	<validator type="requiredstring"><!-- 使用哪个验证器 （见下面默认验证器详解）-->
+		<!-- 给验证器注入参数 -->
+		<param name="fieldName">password</param><!-- 验证哪个字段 -->
+		<message>密码呢</message>
+	</validator>
+</validators>

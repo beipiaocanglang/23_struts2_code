@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+1、在src下创建名称为struts的xml配置文件
+2、导入约束
+	约束位置：struts2-core-xxx.jar中的struts-2.3.dtd中
+ -->
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 
+		修改struts2常量使用的元素是constant
+		属性name:对应的key
+		value：对应的值
+	-->
+	<!-- 开启开发者模式 -->
+	<constant name="struts.devMode" value="true"></constant>
+	<!-- 例如：修改struts2默认拦截的url后缀 -->
+	<!-- <constant name="struts.action.extension" value="action"></constant> -->
+	
+	<!-- 
+		package元素：
+			作用：把动作类都分包来管理。目的是便于我们更好的模块化开发。配置文件中引入了面向对象的思想。
+			属性：
+				name：指定包的名称。该属性必须写。名称取值要唯一。
+				extends：指定当前包的父包。子包自动具备父包定义的内容。一般我们都继承struts-default的包(在struts-default.xml配置文件中定义着)，
+						该包定义着struts2的核心功能。如果不继承struts-default包，struts2核心功能都用不了。
+				abstract:把当前包声明为抽象包。抽象包一般都定义公共的配置，而且就是用来被继承的。
+						注意：只有没有action元素的包，才能被声明为抽象包。
+				namespace:指定当前包的名称空间。目的是为了模块化管理访问URL。
+							当我们配置了名称空间之后：访问URL就变成了   名称空间+hello
+							不写的时候是有默认值得:
+								默认值是：""
+								"/"不是默认的名称空间，而是根名称空间。
+	-->
+	<package name="p1" extends="struts-default">
+		
+		<!-- 
+			action元素：
+				作用：配置动作名称和动作类以及动作方法的对应关系。
+				name：指定的是动作名称。它是与页面上请求URL后面对应起来的。但是此处不要写后缀，也不能写后缀。
+					 动作名称的要求：必须唯一
+				class：指定的是动作类的全类名。
+				method：指定的是动作方法名称。
+		 -->
+		<!-- 
+			动作类的三种定义方式：
+				第一种定义方式：无侵入式的
+					好处:不依赖于任何东西，低耦合度
+					定义一个普通类，提供一个符合要求的动作方法。
+					动作方法的要求：
+						1、public
+						2、返回值是String
+						3、没有参数 
+		-->
+		<action name="hello" class="study.web.action.HelloAction" method="sayHello">
+			<!-- 执行完成之后，还要响应浏览器 
+				name属性的取值是和动作方法的返回值一致，且严格区分大小写。
+			-->
+			<result name="success" type="dispatcher">/success.jsp</result>
+		</action>
+		
+		<!-- 动作类的第二种定义方式：
+				实现Action接口。该接口中提供了一些常量
+				SUCCESS：一般多用于全部成功。
+				ERROR：当我们的动作方法运行出现执行异常时使用。
+				INPUT：当我们提交数据失败时，需要回显数据，一般使用INPUT。
+				LOGIN：一般返回登录界面。
+				NONE：不返回任何结果视图。一般多用于文件下载，输出json数据。
+					 可以使用return null;来实现和return NONE一样的效果
+		-->
+		<action name="hello1" class="study.web.action.Hello1Action" method="sayHello">
+			<result name="success" type="dispatcher">/success.jsp</result>
+		</action>
+		
+		<!-- 默认的动作方法：是Action接口中的execute方法。如果是执行该方法，可以不指定method属性。 -->
+		<action name="hello2Action" class="study.web.action.Hello2Action">
+			<result name="success" type="dispatcher">/success.jsp</result>
+		</action>
+		
+		<!-- 动作类的第三种定义方式：推荐的方式
+				继承ActionSupport的类，该类就是Action接口的实现类。
+				在我们的实际开发中：
+					一般动作类都要继承ActionSupport。
+		-->
+		<action name="hello3Action" class="study.web.action.Hello3Action" method="sayHello">
+			<result name="success" type="dispatcher">/success.jsp</result>
+		</action>
+		
+		<!-- 
+			见图11
+			默认的动作类：ActionSupport
+			默认的动作方法：execute()
+			name取值随意（唯一、有意义就行）
+			测试：直接访问
+				http://localhost:8080/struts2-test05-action/defaultAction就会跳转页面
+		-->
+		<action name="defaultAction">
+			<result name="success" type="dispatcher">/success.jsp</result>
+		</action>
+	</package>
+	
+	
+	
+	<!-- 基本版本
+	<package name="user" extends="struts-default">
+		添加用户
+		<action name="addUser" class="study.web.action.Hello4Action" method="addUser">
+			<result name="success" type="dispatcher">addUser.jsp</result>
+		</action>
+		删除用户
+		<action name="deleteUser" class="study.web.action.Hello4Action" method="deleteUser">
+			<result name="success" type="dispatcher">deleteUser.jsp</result>
+		</action>
+		修改用户
+		<action name="updataUser" class="study.web.action.Hello4Action" method="updataUser">
+			<result name="success" type="dispatcher">updataUser.jsp</result>
+		</action>
+		查找用户
+		<action name="findUser" class="study.web.action.Hello4Action" method="findUser">
+			<result name="success" type="dispatcher">findUser.jsp</result>
+		</action>
+	</package> -->
+	
+	<!-- 
+		使用*通配符来匹配一个或者多个字符 （此方法常用）
+		{n}表明的是通配符出现的位置。从1开始	
+		一个类中有多个方法时可以使用通配符
+		页面：
+			<a href="${pageContext.request.contextPath}/addUser.action">添加一个用户</a>
+			<a href="${pageContext.request.contextPath}/deleteUser.action">删除一个用户</a>
+			<a href="${pageContext.request.contextPath}/updataUser.action">修改一个用户</a>
+			<a href="${pageContext.request.contextPath}/findUser.action">查找一个用户</a>
+	 -->
+	<!-- <package name="user" extends="struts-default">
+		<action name="*" class="study.web.action.Hello4Action" method="{1}">
+			<result name="success" type="dispatcher">{1}.jsp</result>
+		</action>
+	</package> -->
+	
+	<!-- 
+		使用通配符的升级版本 
+		当有多个类时可以使用升级版本的通配符
+		所有的action，都适用于此配置。它是通配符的形式。
+		我们还可以写成全字符匹配，或者多字符匹配。
+		他们之间有优先级问题：
+			全字符匹配最高>多字符匹配>全使用通配符
+		页面：
+			<a href="${pageContext.request.contextPath}/add_User.action">添加一个用户</a>
+			<a href="${pageContext.request.contextPath}/delete_User.action">删除一个用户</a>
+			<a href="${pageContext.request.contextPath}/updata_User.action">修改一个用户</a>
+			<a href="${pageContext.request.contextPath}/find_User.action">查找一个用户</a>
+	-->
+	<package name="user" extends="struts-default">
+		<!-- 全是用通配符 -->
+		<action name="*_*" class="study.web.action.Hello4Action" method="{1}{2}">
+			<result name="success" type="dispatcher">{1}{2}.jsp</result>
+		</action>
+		<!-- 多字符通配符 -->
+		<action name="*_User" class="study.web.action.Hello4Action" method="{1}User">
+			<result name="success" type="dispatcher">{1}User.jsp</result>
+		</action>
+		<!-- 全字符匹配 -->
+		<action name="add_User" class="study.web.action.Hello4Action" method="addUser">
+			<result name="success" type="dispatcher">addUser.jsp</result>
+		</action>
+	</package> 
+</struts>

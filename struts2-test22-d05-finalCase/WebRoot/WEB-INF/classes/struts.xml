@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 开启开发者模式 -->
+	<constant name="struts.devMode" value="true"></constant>
+	<!-- 修改struts的默认主题 -->
+	<constant name="struts.ui.theme" value="simple"></constant>
+	<!-- 开启静态方法调用 -->
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true"></constant>
+	
+	<!-- 自定义全局结果视图和拦截器 -->
+	<package name="MyDefaultInterceptor" extends="struts-default" abstract="true">
+		<!-- 声明拦截器 -->
+		<interceptors>
+			<interceptor name="MyLoginInterceptor" class="study.web.finalcaseaction.action.CheckLoginInterceptor"></interceptor>
+			<!-- 自定义默认拦截器栈 -->
+			<interceptor-stack name="MyDefaultStack">
+				<interceptor-ref name="MyLoginInterceptor"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="MyDefaultStack"></default-interceptor-ref>
+		<!-- 定义全局结果视图 -->
+		<global-results>
+			<result name="login">/login/login.jsp</result>
+		</global-results>
+	</package>
+	
+	
+	<!-- 用户登录 -->
+	<package name="p1" extends="struts-default">
+		<action name="login" class="study.web.finalcaseaction.action.UserAction" method="userLogin">
+			<result name="success" type="redirect">/login/home.jsp</result>
+			<result name="input">/login/login.jsp</result>
+		</action>
+	</package>
+
+	<!-- 获取用户信息 -->
+	<package name="user" extends="MyDefaultInterceptor">
+		<!-- 获取中间右侧用户列表 -->
+		<action name="findAllUser" class="study.web.finalcaseaction.action.UserAction" method="findAllUser">
+			<result name="success">/user/list.jsp</result>
+		</action>
+		<!-- 添加用户按钮 -->
+		<action name="addUIUser" class="study.web.finalcaseaction.action.UserAction" method="addUIUser">
+			<result name="success">
+				<param name="location">/user/add.jsp</param>
+			</result>		
+		</action>
+		<!-- 添加用户-保存用户 -->
+		<action name="addUser" class="study.web.finalcaseaction.action.UserAction" method="addUser">
+			<result name="success" type="redirectAction">findAllUser</result>
+			<result name="input">/user/add.jsp</result>
+		</action>
+		<!-- 根据用户id查看用户详细信息 -->
+		<action name="findUserById" class="study.web.finalcaseaction.action.UserAction" method="findUserById"> 
+			<result name="success">/user/view.jsp</result>
+		</action>
+		<!-- 简历下载 -->
+		<action name="download" class="study.web.finalcaseaction.action.UserAction" method="download">
+			<result name="success" type="stream">
+				<!-- 给结果类型注入参数：两个头 一个流 -->
+				<param name="contentType">application/octet-stream</param>
+				<param name="contentDisposition">attachment;filename=${@java.net.URLEncoder@encode(downloadFileName,"UTF-8")}</param>
+				<param name="inputStream">inputStream</param>
+			</result>
+		</action>
+		<!-- 删除用户 -->
+		<action name="deleteUser" class="study.web.finalcaseaction.action.UserAction" method="deleteUser">
+			<result name="success" type="redirectAction">findAllUser</result>
+			<result name="input" type="redirectAction">findAllUser</result>
+		</action>
+		<!-- 显示编辑用户视图 -->
+		<action name="editUIUser" class="study.web.finalcaseaction.action.UserAction" method="editUIUser">
+			<result name="success">/user/edit.jsp</result>
+		</action>
+		<!-- 保存编辑后的用户信息 -->
+		<action name="editUser" class="study.web.finalcaseaction.action.UserAction" method="editUser">
+			<result name="success" type="redirectAction">findAllUser</result>
+			<result name="input">/user/edit.jsp</result>
+		</action>
+		<!-- 多条件查询 -->
+		<action name="findUserByCondition" class="study.web.finalcaseaction.action.UserAction" method="findUserByCondition">
+			<result name="success">/user/list.jsp</result>
+		</action>
+	</package>
+
+</struts>

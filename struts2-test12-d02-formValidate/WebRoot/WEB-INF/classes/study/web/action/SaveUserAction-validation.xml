@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC
+  		"-//Apache Struts//XWork Validator 1.0.3//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<!-- 验证用户名 -->
+	<field name="username">
+		<field-validator type="requiredstring">
+			<message>用户名不能为空</message>
+		</field-validator>
+	</field>
+	
+	<!-- 验证年龄 -->
+	<field name="age">
+		<field-validator type="int">
+			<!-- 使用param元素注入参数 -->
+			<param name="min">18</param>
+			<param name="max">100</param>
+			<message>年龄是整数，必须介于18-100之间</message>
+		</field-validator>
+	</field>
+	
+	<!-- 验证邮箱 -->
+	<field name="email">
+		<field-validator type="email">
+			<message>邮箱必须是符合规则的</message>
+		</field-validator>
+	</field>
+	
+	
+	<!-- 验证密码 -->
+	<field name="password">
+		<field-validator type="requiredstring">
+			<message>密码不能为空</message>
+		</field-validator>
+		<field-validator type="stringlength">
+			<param name="minLength">3</param>
+			<param name="maxLength">8</param>
+			<message>长度是3~8位</message>
+		</field-validator>
+	</field>
+	
+	<!-- 
+		验证确认密码
+		因为是多个字段的验证，所以需要使用基于验证器的验证	
+	-->
+	<validator type="expression">
+		<param name="expression">
+			<![CDATA[
+				repassword == password
+			]]>
+		</param>
+		<message>两次密码必须一致</message>
+	</validator>
+	
+	<!-- 验证成绩 -->
+	<field name="score">
+		<field-validator type="regex">
+			<param name="regex">
+				<!-- <![CDATA[]]> ：CDATA区会将里面的内容做为字符串解析  -->
+				<![CDATA[
+					\d
+				]]>
+			</param>
+			<message>成绩必须是数字</message>
+		</field-validator>
+	</field>
+	
+	<!-- 验证个人主页URL -->
+	<field name="url">
+		<field-validator type="url">
+			<message>个人主页必须符合格式</message>
+		</field-validator>
+	</field>
+	
+	<!-- 验证性别 -->
+	<field name="gender">
+		<field-validator type="required">
+			<message>必须选择一个性别</message>
+		</field-validator>
+	</field>
+	
+</validators>

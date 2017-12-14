@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 开启开发者模式 -->
+	<constant name="struts.devModel" value="true"/>
+	<!-- 改变上传文件大小限制的方式：只能用修改常量的方式 (单位：字节，例如：2M=2048k=2097152byte(字节)-->
+	<!-- <constant name="struts.multipart.maxSize" value="10485760"/> -->
+	
+	<package name="up1" extends="struts-default">
+		<!-- 文件上传 -->
+		<action name="upload1" class="study.web.action.UploadDemo1" method="upload1">
+			<!-- 给上传文件的拦截器注入参数,限制上传文件的大小
+			此种方式无法限制上传文件的大小
+			<interceptor-ref name="defaultStack">
+				<param name="fileUpload.maximumSize">10485760</param>
+			</interceptor-ref> -->
+			<interceptor-ref name="defaultStack">
+				<!-- 限制文件的扩展名 -->
+				<param name="fileUpload.allowedExtensions">.jpg,.png,.jpeg,.bmp</param>
+				<!-- 限制文件的MIME类型 -->
+				<param name="fileUpload.allowedTypes">image/jpeg,image/png,image/pjpeg</param>
+			</interceptor-ref>
+			<result name="success">success.jsp</result>
+			<result name="input">index.jsp</result>
+		</action>
+		
+		<!-- 多文件上传 -->
+		<action name="upload2" class="study.web.action.UploadDemo2" method="upload2">
+			<interceptor-ref name="defaultStack">
+				<!-- 限制文件的扩展名 -->
+				<param name="fileUpload.allowedExtensions">.jpg,.png,.jpeg,.bmp</param>
+				<!-- 限制文件的MIME类型 -->
+				<param name="fileUpload.allowedTypes">image/jpeg,image/png,image/pjpeg</param>
+			</interceptor-ref>
+			<result name="success">success.jsp</result>
+			<result name="input">index.jsp</result>
+		</action>
+		
+		<!-- 文件下载方法一 -->
+		<!-- <action name="download" class="study.web.action.DownloadAction" method="download"></action> -->
+		<!-- 文件下载方法二 -->
+		<action name="download" class="study.web.action.DownloadAction" method="download">
+			<!-- 使用stream结果类型的拦截器(在struts-default.xml中) -->
+			<result name="success" type="stream">
+				<!-- 给结果类型注入参数：两个头 一个流 -->
+				<param name="contentType">application/octet-stream</param>
+				<param name="contentDisposition">attachment;filename=IMG_0060.JPG</param>
+				<param name="inputStream">inputStream</param>
+			</result>
+		</action>
+		
+		
+	</package>
+</struts>

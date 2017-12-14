@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 开启开发者模式 -->
+	<constant name="struts.devModel" value="true"/>
+	
+	<!-- 开启静态方法调用 -->
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
+	
+	<!-- 手动向contextMap中存数据，一般是框架帮我们做 -->
+	<package name="context1" extends="struts-default">
+		<action name="contextMapDemo" class="study.web.action.ContextMapAction" method="contextMapDemo">
+			<result name="success">index.jsp</result>
+		</action>
+	</package>
+	
+</struts>
